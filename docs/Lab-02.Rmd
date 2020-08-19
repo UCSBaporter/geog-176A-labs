@@ -31,9 +31,9 @@ library(zoo)
 url = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv'
 home = read_csv(url)
 
-read_excel = 'data/PopulationEstimates.xls'
+read_excel = '../data/PopulationEstimates.xls'
 
-pop = readxl::read_excel("data/PopulationEstimates.xls", skip = 2) %>% 
+pop = readxl::read_excel("../data/PopulationEstimates.xls", skip = 2) %>% 
   select(pop2019 = POP_ESTIMATE_2019, fips = FIPStxt, State)
 
 CA_pop_2019 = pop %>%
@@ -93,7 +93,7 @@ knitr::kable(most_new_cases, caption = "New Case Counts: Top 5 CA counties", col
 
 ```{r}
 
-pop = readxl::read_excel("data/PopulationEstimates.xls", skip = 2) %>%
+pop = readxl::read_excel("../data/PopulationEstimates.xls", skip = 2) %>%
   select(pop2019 = "POP_ESTIMATE_2019", fips = "FIPStxt", state = "State")
 
 CA_pop_covid = right_join(pop, home, by ="fips") %>% 
