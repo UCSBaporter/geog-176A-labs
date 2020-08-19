@@ -4,4 +4,4 @@ navbar:
   title: "My Beautiful Website"
   left:
     - text: "Home"
-      href: Lab-02.html
+      href: docs/Lab-02.html
