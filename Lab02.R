@@ -191,7 +191,7 @@ ggplot(data=Q2, aes(x = date, y = value)) +
        caption = "Daily Exercise 07: Abigail Porter")
 
 
-***************
+*************
 Change Q2 to new name + sink new info (review )
 Q2 = home %>%
   filter(state %in% c("New York","California", "Louisiana", "Florida")) %>%
