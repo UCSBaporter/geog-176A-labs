@@ -141,6 +141,21 @@ CA_pop_CovidCumulative = pop %>% right_join(pop, most_cumulative_cases, by = "fi
 
 ## Question 2: Covid-19 New York, California, Louisiana, and Florida
 
+Q2 = home %>%
+  filter(state %in% c("New York","California", "Louisiana", "Florida")) %>%
+  group_by(state, date) %>% summarise(cases = sum(cases)) %>%
+  mutate(newCases = cases - lag(cases),
+         roll7 = zoo::rollmean(newCases, 7, fill = NA, align = 'right')) %>% ungroup()
+
+Q2 %>% ggplot(aes(x = date, y = newCases)) + geom_col(aes(y = newCases), col = NA, fill = "#F5B8B5") +
+  geom_line(aes(y = roll7), col = "darkred", size = 1) + facet_grid(~state, scale = "free_y") +
+  ggthemes::theme_wsj() + theme(legend.position = "right")
+labs(title = paste("Daily Cases in NY, CA, LA, FL")) +
+  theme(plot.background = element_rect(fill = "white"),
+        panel.background = element_rect(fill = "white"),
+        plot.title = element_text(size = 10, face = 'bold')) +
+  theme(aspect.ratio = .5)
+
 
 
 Q2 = covid %>%
