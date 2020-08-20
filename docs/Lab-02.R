@@ -157,13 +157,76 @@ labs(title = paste("Daily Cases in NY, CA, LA, FL")) +
   theme(aspect.ratio = .5)
 
 
+Q2b = Q2 %>%  inner_join(p2, by = c("state" = "Area_Name") ) %>%
+  group_by(state, date) %>%
+  summarise(newCase_pc = sum(newCase_pc), pop2019, .groups = "drop") %>%
+  mutate(newCase_pc = cases - lag(cases), newCases / pop2019),
+         roll7 = zoo::rollmean(newCase_pc, 7, fill = NA, align = 'right') %>% ungroup()
 
-Q2 = covid %>%
-  filter(state %in% c("New York","California", "Louisiana", "Florida")) %>%
+Q2b %>% ggplot(aes(x = date, y = newCases)) + geom_col(aes(y = newCases), col = NA, fill = "#F5B8B5") +
+  geom_line(aes(y = roll7), col = "darkred", size = 1) + facet_grid(~state, scale = "free_y") +
+  ggthemes::theme_wsj() + theme(legend.position = "right") +
+labs(title = paste("Daily Cases in NY, CA, LA, FL")) +
+  theme(plot.background = element_rect(fill = "white"),
+        panel.background = element_rect(fill = "white"),
+        plot.title = element_text(size = 10, face = 'bold')) +
+  theme(aspect.ratio = .5)
+
+*******************
+
+Q2 %>%  inner_join(p2, by = c("state" = "Area_Name")) %>%
   group_by(state, date) %>% ungroup() %>%
+  summarise(newCases = sum(newCases) / (max(pop) /100000) %>% mutate(roll7 = zoo::rollmean(newCases, 7, fill = NA, align = 'right'))
+
+ggplot(aes(x = date, y = roll7)) + geom_col(aes(y = newCases), col = NA, fill = "#F5B8B5") +
+  geom_line(aes(y = newCases), col = "green", size = 1) + facet_grid(~state, scale = "free_y") +
+  ggthemes::theme_wsj() + theme(legend.position = "right") +
+  labs(title = paste("Daily Cases in NY, CA, LA, FL by population (100,000) ")) +
+  theme(plot.background = element_rect(fill = "white"),
+        panel.background = element_rect(fill = "white"),
+        plot.title = element_text(size = 10, face = 'bold')) +
+  theme(aspect.ratio = .5)
+
+
+ ***************
+
+
+  ggplot(aes(x = date, y = newCases)) +
+  geom_col(aes(y = newCases, col = state))+
+  geom_line(aes(col = state)) + geom_line(aes(y = roll7), size = 1)+
+  facet_grid(~state) + ggthemes::theme_solarized() + ggthemes::scale_color_gdocs() +
+  theme(legend.position = "none") +
+  labs(title = "Daily new cases Per Capita by State", y = "Daily New Count Per Capita", x = "Date",
+       caption = "Lab 02")
+
+  home %>%
+  filter(state %in% c("New York","California", "Louisiana", "Florida")) %>%
+  right_join(pop, by = "fips")
+
+Q2_pop = pop %>% filter(State %in% c("NY", "CA", "LA", "FL")) %>%
+  group_by(state, date) %>% right_join(Q2b, by "State")
+
+summarise(cases = sum(cases)) %>%
   mutate(newCases = cases - lag(cases),
+         roll7 = zoo::rollmean(newCases, 7, fill = NA, align = 'right')) %>% ungroup()
+
+ggplot(data = Q2_pop, aes(x = date)) +
+  geom_col(aes(y = cases_per_capita), col = NA, fill = "lightblue") +
+  geom_line(aes(y = roll7), col = "blue", size = 1) +
+  ggthemes::theme_wsj() +
+  labs(title = paste("New Cases Per Capita")) +
+  theme(plot.background = element_rect(fill = "white"),
+        panel.background = element_rect(fill = "white"),
+        plot.title = element_text(size = 14, face = 'bold')) +
+  facet_grid(~areaname, scales = "free_y")
+
+
+  group_by(state, date) %>% ungroup() %>%
+  mutate(newCases = cases - lag(cases), newCases/ pop2019,
          roll7 = zoo::rollmean(newCases, 7, fill = NA, align = 'right')) %>%
-  ungroup() %>% filter(cases > 0) %>% ggplot(aes(x = date)) + geom_col(aes(y = cases), col = NA, fill = "#F5B8B5") +
+  ungroup() %>% filter(cases > 0)
+
+ggplot(aes(x = date)) + geom_col(aes(y = cases), col = NA, fill = "#F5B8B5") +
   geom_line(aes(y = roll7), col = "darkred", size = 1) +
   ggthemes::theme_wsj() +
   labs(title = paste("Daily Cases in NY, CA, LA, FL")) +

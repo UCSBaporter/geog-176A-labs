@@ -132,8 +132,6 @@ pop_most_new_cases = CA_pop_covid %>% filter(date == max(date)) %>% slice_max(ne
   select(county, newCase_pc) 
 
 
-#%>% arrange(-most_new_cases) %>% head(20)
-
 knitr::kable(pop_most_new_cases, caption = c("Pop New Case Counts: Top 5 CA counties"),
              col.names = c("County", "New Cases with Pop (100,000)"))
 ```
@@ -151,7 +149,7 @@ knitr::kable(pop_safe_county, caption = c("Pop Lowest Case Counts: CA counties")
 
 
 ```
-### Results:  Covid-19 cumulative case counts are the highest in the following counties: Los Angeles, Riverside, Orange, San Bernardino, and San Diego.  The highest new cases over the past 14 days are in the following counties: Imperial, Tulare, merced, Madera, and Yuba.  Despite the covid-19 increases throughout the state the following counties have shown less than 100 new cases over the past 14 days: Alpine, Calaveras, Del Norte, El Dorado, Humboldt, Lake, Mariposa, Modoc, Mono, Nevada, Plumas, Shasta, Siskiyou, Trinity, and Tuolumne.  Based on these results you can see that population density plays a large role in the spread of covid-19 and more remote counties in Northern California have less current spread.
+### Results:  Covid-19 cumulative case counts are the highest in the following counties: Los Angeles, Riverside, Orange, San Bernardino, and San Diego.  The highest new cases over the past 14 days are in the following counties: Imperial, Tulare, Merced, Madera, and Yuba.  Despite the covid-19 increases throughout the state the following counties have shown less than 100 new cases over the past 14 days: Alpine, Calaveras, Del Norte, El Dorado, Humboldt, Lake, Mariposa, Modoc, Mono, Nevada, Plumas, Shasta, Siskiyou, Trinity, and Tuolumne.  Based on these results you can see that population density plays a large role in the spread of covid-19 and more remote counties in Northern California have less current spread.
     
 
 
@@ -166,7 +164,7 @@ Q2 = home %>%
   mutate(newCases = cases - lag(cases),
          roll7 = zoo::rollmean(newCases, 7, fill = NA, align = 'right')) %>% ungroup()  
   
-  Q2 %>% ggplot(aes(x = date, y = newCases)) + geom_col(aes(y = newCases), col = NA, fill = "#F5B8B5") +
+Q2 %>% ggplot(aes(x = date, y = newCases)) + geom_col(aes(y = newCases), col = NA, fill ="#F5B8B5") +
   geom_line(aes(y = roll7), col = "darkred", size = 1) + facet_grid(~state, scale = "free_y") +
   ggthemes::theme_wsj() + theme(legend.position = "right")
   labs(title = paste("Daily Cases in NY, CA, LA, FL")) +
@@ -175,9 +173,6 @@ Q2 = home %>%
         plot.title = element_text(size = 10, face = 'bold')) +
   theme(aspect.ratio = .5)
 ```
-```{r}
-
-```
 
 
 
@@ -190,4 +185,5 @@ Q2 = home %>%
 
 
 ```
+### Results:  (Although I was unable to process the second graph I've studied Covid-19 data since the "Stay in Place" orders were given.)  It is important to review population numbers when reflecting on Covid-19 cases to get a better picture of states that are having large peaks or dips within case numbers.  Without factoring population, states with higher populations will appear to have way more covid-19 cases, but this is not the true picture.  Out of the four states reviewed, California has the largest population overall, but currently does not have the highest covid-19 cases.  Since the first set of graphs do not take population into account California would appear much higher than overall and Louisiana would appear to have low cases.  Since Louisiana has a much lower population than California, Florida, and New York if population was factored in the Louisiana graph would show much higher per population cases.  
 
